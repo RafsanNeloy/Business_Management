@@ -1,26 +1,56 @@
 const mongoose = require('mongoose');
-
+// done
 const billSchema = new mongoose.Schema({
-  billId: {
-    type: String,
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
-  date: {
+  bill_id: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  created_date: {
     type: Date,
     default: Date.now
   },
-  amount: {
+  total_bill: {
     type: Number,
     required: true
   },
-  pdfLink: {
-    type: String
+  is_paid: {
+    type: Boolean,
+    default: false
   },
-  customer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Customer',
-    required: true
-  }
+  bill_details: [
+    {
+    product_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+    },
+    product_quantity: {
+        type: Number,
+        required: true
+    },
+     less: {
+        type: Number,
+        default: 0
+      },
+      given: {
+        type: Number,
+        default: 0
+      },
+      remains: {
+        type: Number,
+        default: 0
+      }
+    }
+  ]  
 });
 
+billSchema.index({ bill_id: 1 }, { unique: true });
+
 module.exports = mongoose.model('Bill', billSchema);
+
